@@ -2,7 +2,12 @@ import asyncio
 import aiohttp
 
 from api import fetch_json
+from database import get_session
 from schedules import User
+from write import add_user
+
+
+AsyncSession = get_session()
 
 
 async def main():
@@ -30,7 +35,9 @@ async def main():
                 print(f"Error: {result}")
             else:
                 user = User(**result)
-                print(user)
+                async with AsyncSession() as session:
+                    await add_user(user, session)
+                print(f"Added user: {user.name}")
 
 
 if __name__ == "__main__":

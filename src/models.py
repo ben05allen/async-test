@@ -28,6 +28,7 @@ class Address(BaseModel):
     city: Mapped[str]
     zipcode: Mapped[str]
 
+    user: Mapped["User"] = relationship(back_populates="address")
     geo: Mapped["Geo"] = relationship(back_populates="address")
 
 
@@ -39,6 +40,8 @@ class Geo(BaseModel):
     lat: Mapped[float]
     lng: Mapped[float]
 
+    address: Mapped[Address] = relationship(back_populates="geo")
+
 
 class Company(BaseModel):
     __tablename__ = "companies"
@@ -48,6 +51,8 @@ class Company(BaseModel):
     name: Mapped[str]
     catchPhrase: Mapped[str]
     bs: Mapped[str]
+
+    user: Mapped["User"] = relationship(back_populates="company")
 
 
 class User(Base):
