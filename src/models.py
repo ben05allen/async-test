@@ -70,3 +70,6 @@ class User(Base):
 
     address: Mapped[Address] = relationship(back_populates="user")
     company: Mapped[Company] = relationship(back_populates="user")
+
+    def __repr__(self) -> str:
+        return f"User(id={self.id!r}, name={self.name!r}, username={self.username!r})"

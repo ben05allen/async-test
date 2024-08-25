@@ -1,16 +1,17 @@
 import asyncio
 import aiohttp
+from sqlalchemy import select
 
 from api import fetch_json
 from database import get_session
-from schedules import User
+import models
+import schedules
 from write import add_user
 
 
-AsyncSession = get_session()
+async def add_users():
+    AsyncSession = await get_session()
 
-
-async def main():
     # never actually do it this way ;)
     urls = [
         "https://jsonplaceholder.typicode.com/users/1",
@@ -34,10 +35,29 @@ async def main():
             if isinstance(result, Exception):
                 print(f"Error: {result}")
             else:
-                user = User(**result)
+                user = schedules.User(**result)
                 async with AsyncSession() as session:
                     await add_user(user, session)
-                print(f"Added user: {user.name}")
+
+
+async def select_user(username: str) -> models.User | None:
+    AsyncSession = await get_session()
+
+    async with AsyncSession() as session:
+        stmt = select(models.User).where(models.User.username == username).limit(1)
+
+        result = await session.execute(stmt)
+
+        select_user = result.scalars().first()
+
+        return select_user
+
+
+async def main():
+    # await add_users()
+
+    print(await select_user("Kamren"))
+    print(await select_user("Kamrentypo"))
 
 
 if __name__ == "__main__":
