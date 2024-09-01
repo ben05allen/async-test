@@ -1,5 +1,5 @@
 aiohttp
-aioodbc
+aiosqlite
 pydantic
 python-dotenv
 sqlalchemy

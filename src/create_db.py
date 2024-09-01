@@ -7,14 +7,16 @@ from models import Base
 
 load_dotenv()
 # CONN_STR='mssql+aioodbc://[...]
-CONN_STRING = os.environ["CONN_STR"]
+CONN_STR_BASE = os.environ["CONN_STR_BASE"]
+PROJECT_FOLDER = os.environ["PROJECT_FOLDER"]
+DATABASE = os.environ["DATABASE"]
+CONN_STRING = f"{CONN_STR_BASE}{PROJECT_FOLDER}/{DATABASE}"
 
 engine = create_async_engine(CONN_STRING, echo=True)
 
 
 async def main():
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
 
