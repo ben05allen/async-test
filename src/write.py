@@ -1,11 +1,11 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import schedules
-import models
+from models.user import User, Company, Address, Geo
 
 
 async def add_user(user: schedules.User, session: AsyncSession):
-    new_user = models.User(
+    new_user = User(
         id=user.id,
         name=user.name,
         username=user.username,
@@ -17,7 +17,7 @@ async def add_user(user: schedules.User, session: AsyncSession):
     await session.commit()
     await session.refresh(new_user)
 
-    new_company = models.Company(
+    new_company = Company(
         user_id=user.id,
         name=user.company.name,
         catchPhrase=user.company.catchPhrase,
@@ -26,7 +26,7 @@ async def add_user(user: schedules.User, session: AsyncSession):
     session.add(new_company)
     await session.commit()
 
-    new_address = models.Address(
+    new_address = Address(
         user_id=user.id,
         street=user.address.street,
         suite=user.address.suite,
@@ -37,7 +37,7 @@ async def add_user(user: schedules.User, session: AsyncSession):
     await session.commit()
     await session.refresh(new_address)
 
-    new_geo = models.Geo(
+    new_geo = Geo(
         address_id=new_address.id,
         lat=user.address.geo.lat,
         lng=user.address.geo.lng,

@@ -4,7 +4,7 @@ from sqlalchemy import select
 
 from api import fetch_json
 from database import get_session
-import models
+import models as base
 import schedules
 from write import add_user
 
@@ -40,11 +40,11 @@ async def add_users():
                     await add_user(user, session)
 
 
-async def select_user(username: str) -> models.User | None:
+async def select_user(username: str) -> base.User | None:
     AsyncSession = await get_session()
 
     async with AsyncSession() as session:
-        stmt = select(models.User).where(models.User.username == username).limit(1)
+        stmt = select(base.User).where(base.User.username == username).limit(1)
 
         result = await session.execute(stmt)
 
@@ -54,10 +54,10 @@ async def select_user(username: str) -> models.User | None:
 
 
 async def main():
-    # await add_users()
+    await add_users()
 
-    print(await select_user("Kamren"))
-    print(await select_user("Kamrentypo"))
+    # print(await select_user("Kamren"))
+    # print(await select_user("Kamrentypo"))
 
 
 if __name__ == "__main__":
